@@ -111,8 +111,8 @@ function hideCanvas() {
 
 //drawCanvas
 
-let canvasWidth = 500;
-let canvasHeight = 500;
+let canvasWidth = 600;
+let canvasHeight = 600;
 
 let color = ["#ff0000", "#ffffff", "#FFFF00", "#000000"];
 
@@ -128,6 +128,7 @@ let drawCanvas = {
         this.ctx = this.canvas.getContext("2d");
 
         this.canvas.style.border = "5px solid black";
+        this.canvas.style.cursor = "crosshair";
 
         document.body.appendChild(this.canvas);
 
@@ -140,6 +141,7 @@ let drawCanvas = {
         //toolbar
         this.toolbar = document.createElement("footer");
         this.toolbar.className = "toolbar";
+        this.toolbar.zIndex = 100;
 
         startControls();
     }
@@ -295,7 +297,7 @@ function startControls() {
     drawCanvas.toolbar.appendChild(highlighterBtn);
     drawCanvas.toolbar.appendChild(lineBtn);
     drawCanvas.toolbar.appendChild(colorInput);
-    document.body.appendChild(drawCanvas.toolbar);
+    document.body.insertBefore(drawCanvas.toolbar, drawCanvas.canvas);
 
 }
 

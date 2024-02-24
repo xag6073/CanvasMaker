@@ -3,7 +3,6 @@ body {
     margin: 0;
     padding: 0;
     background-color: white;
-    cursor:crosshair;
 }
 
 .nav-button {
@@ -70,12 +69,4 @@ body {
 
 .tool-button:hover {
     background-color: #d0d0f0; /* Darker green when hovered over */
-}
-
-#canvas1 {
-    border: 5px solid black;
-    position: absolute;
-    transform: translate(20%, 10%);
-    max-width: 100%;
-    max-height: 100%;
 }
