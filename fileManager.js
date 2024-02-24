@@ -32,41 +32,48 @@ function showFiles() {
 }
 
 function createFileButton(file) {
-    let button = document.createElement("button");
+    var button = document.createElement("button");
     button.value = file;
     button.className = "icon-button";
     button.innerHTML = fileSystem[file].name; 
     button.addEventListener("click", function() {
-        showCanvas(this.value);
+        showCanvas(file);
     });
-    button.addEventListener("contextmenu", showContextMenu);
+    button.addEventListener("contextmenu", function(e) {
+        showContextMenu(e, file);
+    });
     return button;
 
 }
 
-function showContextMenu(e) {
-    let cm = document.getElementById("contextMenu");
-    let ren = document.getElementById("cmRename");
-    let del = document.getElementById("cmDelete");
+function showContextMenu(e, file) {
+    var cm = document.getElementById("contextMenu");
+    var ren = document.getElementById("cmRename");
+    var del = document.getElementById("cmDelete");
+
+    var renameHandler = function() {
+        renameFile(file);
+        cm.style.display = "none";
+    }
+
+    var deleteHandler = function() {
+        deleteFile(file);
+        cm.style.display = "none";
+    }
 
     e.preventDefault();
     cm.style.display = "block";
     cm.style.left = e.clientX + "px";
     cm.style.top = e.clientY + "px";
 
-    window.addEventListener("click", function(e) {
+    ren.addEventListener("click", renameHandler);
+    del.addEventListener("click", deleteHandler);
+    window.addEventListener("click", function cmHandler(e) {
+        ren.removeEventListener("click", renameHandler);
+        del.removeEventListener("click", deleteHandler);
         cm.style.display = "none";
-    }, true);
-    ren.addEventListener("click", function() {
-        alert(e.target);
-        renameFile(e.target.value);
-        cm.style.display = "none";
-    }, true);
-    del.addEventListener("click", function() {
-        alert(e.target.value);
-        deleteFile(e.target.value);
-        cm.style.display = "none";
-    }, true);
+        this.window.removeEventListener("click", cmHandler);
+    });
 }
 
 function renameFile(input) {
@@ -77,39 +84,12 @@ function renameFile(input) {
         return;
     }
     alert("Invalid new file name.");
-    /*let file = input || prompt("Enter file to rename: ");
-    if(file !== null || file === "") {
-        for(const f in fileSystem) {
-            if(fileSystem[f].name === file) {
-                let newFile = prompt("Enter new file name: ");
-                if(newFile !== null || newFile === "") {
-                    fileSystem[f].name = newFile;
-                    showFiles();
-                    return;
-                }
-                alert("Invalid new file name.");
-                return;
-            }
-        }
-        alert("Could not find file named: " + file);
-    }*/
 }
 
 
 function deleteFile(input) {
     fileSystem.splice(input, 1);
     showFiles();
-    /*let file = input || prompt("Enter file to delete: ");
-    if(file !== null || file === "") {
-        for(const f in fileSystem) {
-            if(fileSystem[f].name === file) {
-                fileSystem.splice(f, 1);
-                showFiles();
-                return;
-            }
-        }
-        alert("Could not find file named: " + file);
-    }*/
 }
 
 function showCanvas(file) {
