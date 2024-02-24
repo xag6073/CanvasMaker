@@ -6,8 +6,11 @@ body {
     cursor:crosshair;
 }
 
-#footer {
-    transform: translate(100%, 200%);
+#fileList {
+    overflow: auto;
+    background-color: white;
+    display: grid;
+
 }
 
 #canvas1 {
