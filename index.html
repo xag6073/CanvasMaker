@@ -10,10 +10,19 @@
   </head>
 
   <body>
-    <button onclick="create()">Create new file. </button>
-    <button onclick="showFiles()">Show files. </button>
+    <nav>
+      <button class="nav-button" onclick="create()">Create</button>
+      <button class="nav-button" onclick="showFiles()">Show Files</button>
+      <button class="nav-button" onclick="renameFile()">Rename</button>
+      <button class="nav-button" onclick="deleteFile()">Delete</button>
+    </nav>  
 
-    <ul id="fileList">
+    <div id="contextMenu" class="context-menu">
+      <button id="cmRename">Rename</button>
+      <button id="cmDelete">Delete</button>
+    </div>
+
+    <ul class="button-grid" id="fileList">
 
     </ul>
 	  <!--<canvas id="canvas1"></canvas> 

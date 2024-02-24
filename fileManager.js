@@ -23,9 +23,93 @@ function showFiles() {
     for(const file in fileSystem) {
         let div = document.createElement("div");
         div.title = fileSystem[file].name;
-        div.innerHTML = "<button value=\""+file+"\" onclick=\"showCanvas(this.value)\">"+fileSystem[file].name+"</button>";
+
+        let fileButton = createFileButton(file);
+
+        div.appendChild(fileButton);
         fileList.appendChild(div);
     }
+}
+
+function createFileButton(file) {
+    let button = document.createElement("button");
+    button.value = file;
+    button.className = "icon-button";
+    button.innerHTML = fileSystem[file].name; 
+    button.addEventListener("click", function() {
+        showCanvas(this.value);
+    });
+    button.addEventListener("contextmenu", showContextMenu);
+    return button;
+
+}
+
+function showContextMenu(e) {
+    let cm = document.getElementById("contextMenu");
+    let ren = document.getElementById("cmRename");
+    let del = document.getElementById("cmDelete");
+
+    e.preventDefault();
+    cm.style.display = "block";
+    cm.style.left = e.clientX + "px";
+    cm.style.top = e.clientY + "px";
+
+    window.addEventListener("click", function(e) {
+        cm.style.display = "none";
+    }, true);
+    ren.addEventListener("click", function() {
+        alert(e.target);
+        renameFile(e.target.value);
+        cm.style.display = "none";
+    }, true);
+    del.addEventListener("click", function() {
+        alert(e.target.value);
+        deleteFile(e.target.value);
+        cm.style.display = "none";
+    }, true);
+}
+
+function renameFile(input) {
+    let newName = prompt("Enter new file name: ");
+    if(newName !== null || newName === "") {
+        fileSystem[input].name = newName;
+        showFiles();
+        return;
+    }
+    alert("Invalid new file name.");
+    /*let file = input || prompt("Enter file to rename: ");
+    if(file !== null || file === "") {
+        for(const f in fileSystem) {
+            if(fileSystem[f].name === file) {
+                let newFile = prompt("Enter new file name: ");
+                if(newFile !== null || newFile === "") {
+                    fileSystem[f].name = newFile;
+                    showFiles();
+                    return;
+                }
+                alert("Invalid new file name.");
+                return;
+            }
+        }
+        alert("Could not find file named: " + file);
+    }*/
+}
+
+
+function deleteFile(input) {
+    fileSystem.splice(input, 1);
+    showFiles();
+    /*let file = input || prompt("Enter file to delete: ");
+    if(file !== null || file === "") {
+        for(const f in fileSystem) {
+            if(fileSystem[f].name === file) {
+                fileSystem.splice(f, 1);
+                showFiles();
+                return;
+            }
+        }
+        alert("Could not find file named: " + file);
+    }*/
 }
 
 function showCanvas(file) {

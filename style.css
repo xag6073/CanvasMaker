@@ -6,11 +6,53 @@ body {
     cursor:crosshair;
 }
 
-#fileList {
-    overflow: auto;
-    background-color: white;
-    display: grid;
+.nav-button {
+    background-color: #016afb; /* Green background */
+    border: none; /* No border */
+    color: white; /* White text */
+    padding: 10px 16px; /* Padding */
+    align-items: center;
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Cursor changes when hovering over the button */
+    transition: background-color 0.3s ease; /* Transition effect */
+}
+  
+.nav-button:hover {
+    background-color: #2f00ff; /* Darker green when hovered over */
+}
 
+.context-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    padding: 10px;
+    background-color: grey;
+    border: 1px solid #ccc;
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 2 columns */
+    gap: 5px; /* space between buttons */
+  }
+  
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+.icon-button:hover {
+    background-color: #d0d0f0;
 }
 
 #canvas1 {
