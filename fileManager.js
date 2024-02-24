@@ -105,7 +105,7 @@ function hideCanvas() {
         window.removeEventListener("keydown", keyControls); 
 
         document.body.removeChild(drawCanvas.canvas);
-        document.body.removeChild(drawCanvas.toolbar);
+        drawCanvas.toolbar.remove();
     }
 }
 
@@ -113,6 +113,8 @@ function hideCanvas() {
 
 let canvasWidth = 500;
 let canvasHeight = 500;
+
+let color = ["#ff0000", "#ffffff", "#FFFF00", "#000000"];
 
 let pos = {x: 0, y: 0};
 var startLine = true;
@@ -137,6 +139,7 @@ let drawCanvas = {
         
         //toolbar
         this.toolbar = document.createElement("footer");
+        this.toolbar.className = "toolbar";
 
         startControls();
     }
@@ -162,7 +165,7 @@ function draw(e) {
 
     switch(mode) {
         case 0:
-            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, "red", 5);
+            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, color[0], 5);
             pos.x = e.offsetX;
             pos.y = e.offsetY;
             break;
@@ -173,7 +176,7 @@ function draw(e) {
             break;
         case 2:
             drawCanvas.ctx.globalAlpha = 0.15;
-            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, "yellow", 20);
+            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, color[2], 5);
             drawCanvas.ctx.globalAlpha = 1;
             pos.x = e.offsetX;
             pos.y = e.offsetY;
@@ -188,7 +191,7 @@ function mouseControls(e) {
             pos.y = e.offsetY;
             startLine = false;
         } else {
-            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, "black", 5);
+            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, color[3], 5);
             startLine = true;
         }
     }
@@ -198,15 +201,23 @@ function mouseControls(e) {
 
 function setMode(num) {
     mode = num;
+    colorInput = document.querySelector("input[type='color']");
     switch(mode) {
         case 0:
+            colorInput.value = color[mode];
             //TODO cchange cursor
             //document.body.style.cursor = "url('./assets/pencursor.png'), auto";
             break;
         case 1:
+            colorInput.value = color[mode];
+            //document.body.style.cursor = "url('pencursor.jpg'), auto";
+            break;
+        case 2:
+            colorInput.value = color[mode];
             //document.body.style.cursor = "url('pencursor.jpg'), auto";
             break;
         case 3:
+            colorInput.value = color[mode];
             startLine = true;
             break;
     }
@@ -245,10 +256,24 @@ function startControls() {
     var eraserBtn = document.createElement("button");
     var highlighterBtn = document.createElement("button");
     var lineBtn = document.createElement("button");
-    penBtn.innerHTML = "Pen";
-    eraserBtn.innerHTML = "Eraser";
-    highlighterBtn.innerHTML = "Highlighter";
-    lineBtn.innerHTML = "Line";
+    var colorInput = document.createElement("input");
+    colorInput.type = "color";
+    colorInput.value = color[mode];
+
+    penBtn.innerHTML = "<img src='./assets/pen.png' width=\"25\" height=\"25\">";
+    penBtn.className = "tool-button";
+    eraserBtn.innerHTML = "<img src='./assets/eraser.png' width=\"25\" height=\"25\">";
+    eraserBtn.className = "tool-button";
+    highlighterBtn.innerHTML = "<img src='./assets/highlighter.png' width=\"25\" height=\"25\">";
+    highlighterBtn.className = "tool-button";   
+    lineBtn.innerHTML = "<img src='./assets/line.png' width=\"25\" height=\"25\">";
+    lineBtn.className = "tool-button";
+    colorInput.className = "tool-button";
+
+    //make color input a bit more symetrical
+    colorInput.style.padding = "3px 3px";
+    colorInput.style.transform = "translateY(-4px)";
+
     penBtn.addEventListener("click", function() {
         setMode(0);
     });
@@ -261,10 +286,15 @@ function startControls() {
     lineBtn.addEventListener("click", function() {
         setMode(3);
     });
+    colorInput.addEventListener("change", function() {
+        color[mode] = colorInput.value;
+    });
+    
     drawCanvas.toolbar.appendChild(penBtn);
     drawCanvas.toolbar.appendChild(eraserBtn);
     drawCanvas.toolbar.appendChild(highlighterBtn);
     drawCanvas.toolbar.appendChild(lineBtn);
+    drawCanvas.toolbar.appendChild(colorInput);
     document.body.appendChild(drawCanvas.toolbar);
 
 }
