@@ -199,8 +199,13 @@ function mouseControls(e) {
 function setMode(num) {
     mode = num;
     switch(mode) {
+        case 0:
+            //TODO cchange cursor
+            //document.body.style.cursor = "url('./assets/pencursor.png'), auto";
+            break;
         case 1:
-            document.body.style.cursor = "url(''), auto";
+            //document.body.style.cursor = "url('pencursor.jpg'), auto";
+            break;
         case 3:
             startLine = true;
             break;
