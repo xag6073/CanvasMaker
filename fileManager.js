@@ -86,7 +86,6 @@ function renameFile(input) {
     alert("Invalid new file name.");
 }
 
-
 function deleteFile(input) {
     fileSystem.splice(input, 1);
     showFiles();
@@ -106,6 +105,7 @@ function hideCanvas() {
         window.removeEventListener("keydown", keyControls); 
 
         document.body.removeChild(drawCanvas.canvas);
+        document.body.removeChild(drawCanvas.toolbar);
     }
 }
 
@@ -135,6 +135,9 @@ let drawCanvas = {
             this.ctx.putImageData(fileSystem[file].data, 0, 0);
         }
         
+        //toolbar
+        this.toolbar = document.createElement("footer");
+
         startControls();
     }
 }
@@ -193,20 +196,30 @@ function mouseControls(e) {
     pos.y = e.offsetY;
 }
 
+function setMode(num) {
+    mode = num;
+    switch(mode) {
+        case 1:
+            document.body.style.cursor = "url(''), auto";
+        case 3:
+            startLine = true;
+            break;
+    }
+}
+
 function keyControls(e) {
     switch(e.key) {
         case 'p':
-            mode = 0;
+            setMode(0);
             break;
         case 'e':
-            mode = 1;
+            setMode(1);
             break;
         case 'h':
-            mode = 2;
+            setMode(2);
             break;
         case 'l':
-            mode = 3;
-            startLine = true;
+            setMode(3);
             break;
         case 's':
             save();
@@ -220,7 +233,34 @@ function keyControls(e) {
 function startControls() {
     drawCanvas.canvas.addEventListener("mousemove", draw);
     drawCanvas.canvas.addEventListener("mousedown", mouseControls);
-    window.addEventListener("keydown", keyControls);    
+    window.addEventListener("keydown", keyControls);
+    
+    //manage toolbar
+    var penBtn = document.createElement("button");
+    var eraserBtn = document.createElement("button");
+    var highlighterBtn = document.createElement("button");
+    var lineBtn = document.createElement("button");
+    penBtn.innerHTML = "Pen";
+    eraserBtn.innerHTML = "Eraser";
+    highlighterBtn.innerHTML = "Highlighter";
+    lineBtn.innerHTML = "Line";
+    penBtn.addEventListener("click", function() {
+        setMode(0);
+    });
+    eraserBtn.addEventListener("click", function() {
+        setMode(1);
+    });
+    highlighterBtn.addEventListener("click", function() {
+        setMode(2);
+    });
+    lineBtn.addEventListener("click", function() {
+        setMode(3);
+    });
+    drawCanvas.toolbar.appendChild(penBtn);
+    drawCanvas.toolbar.appendChild(eraserBtn);
+    drawCanvas.toolbar.appendChild(highlighterBtn);
+    drawCanvas.toolbar.appendChild(lineBtn);
+    document.body.appendChild(drawCanvas.toolbar);
 
 }
 
