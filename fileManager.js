@@ -1,11 +1,6 @@
 //file manager
 
-let fileSystem = [
-    {
-        name: "something",
-        data: "none"
-    }
-]
+let fileSystem = [];
 
 function create() {
     var pm = document.getElementById("promptMenu");
@@ -52,8 +47,13 @@ function create() {
 
 function showFiles() {
     hideCanvas();
+    if(fileSystem.length === 0) {
+        showNotification("No files to show."); 
+        return;
+    }
     let fileList = document.getElementById("fileList");
     fileList.innerHTML = "";
+    
     for(const file in fileSystem) {
         let div = document.createElement("div");
         div.title = fileSystem[file].name;
