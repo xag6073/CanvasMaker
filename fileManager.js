@@ -49,11 +49,10 @@ function showFiles() {
     hideCanvas();
     if(fileSystem.length === 0) {
         showNotification("No files to show."); 
-        return;
     }
     let fileList = document.getElementById("fileList");
     fileList.innerHTML = "";
-    
+
     for(const file in fileSystem) {
         let div = document.createElement("div");
         div.title = fileSystem[file].name;
@@ -390,7 +389,7 @@ function startControls() {
 }
 
 function save() {
-    let imageData = drawCanvas.ctx.getImageData(0, 0, drawCanvas.canvas.height, drawCanvas.canvas.width);
+    let imageData = drawCanvas.ctx.getImageData(0, 0, drawCanvas.canvas.width, drawCanvas.canvas.height);
     fileSystem[drawCanvas.file].data = imageData;
     showNotification("File saved.");
 }
