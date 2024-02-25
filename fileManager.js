@@ -1,3 +1,22 @@
+//client-side javascript
+
+let data = { key1: 'value1', key2: 'value2' }; // The data you want to send
+
+fetch('/api/save', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(data),
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch((error) => console.error('Error:', error));
+
+
+
+
+
 //file manager
 
 let fileSystem = [];
@@ -82,7 +101,7 @@ function showPromptMenu(msg, file, func) {
     pm.style.display = "block";
 
     var confirmHandler = function() {
-        if(pmInput.value === "" || pmInput.value === null) {
+        if(pmInput.value.trim() === "" || pmInput.value === null) {
             pmMessage.innerHTML = "Invalid file name.";
         } else { 
             pmConfirm.removeEventListener("click", confirmHandler);
