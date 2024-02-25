@@ -3,46 +3,7 @@
 let fileSystem = [];
 
 function create() {
-    var pm = document.getElementById("promptMenu");
-    var pmTitle = document.getElementById("pmTitle");
-    var pmInput = document.getElementById("pmInput");
-    var pmConfirm = document.getElementById("pmConfirm");
-    var pmCancel = document.getElementById("pmCancel");
-    var pmMessage = document.getElementById("pmMessage");
-
-    pmTitle.innerHTML = "Enter a file name:";
-    pm.style.display = "block";
-
-    var confirmHandler = function() {
-        if(pmInput.value === "" || pmInput.value === null) {
-            pmMessage.innerHTML = "Invalid file name.";
-        } else { 
-            pmConfirm.removeEventListener("click", confirmHandler);
-            pmCancel.removeEventListener("click", cancelHandler);
-            pm.style.display = "none";
-            showNotification(pmInput.value + " created.");
-            fileSystem.push({name: pmInput.value, data: "none"});
-            pmInput.value = "";
-            showFiles();
-        }
-    }   
-
-    var cancelHandler = function() {
-        pmConfirm.removeEventListener("click", confirmHandler);
-        pmCancel.removeEventListener("click", cancelHandler);
-        pm.style.display = "none";
-        showFiles();
-    }
-
-    pmConfirm.addEventListener("click", confirmHandler);
-    pmCancel.addEventListener("click", cancelHandler);
-
-    /*let fileName = prompt("Enter file name: ", "newCanvas");
-    if(fileName !== null || fileName === "") {
-        fileSystem.push({name: fileName, data: "none"});
-        showFiles();
-    }*/
-
+    showPromptMenu("Enter a file name:", 0, "create");
 }
 
 function showFiles() {
@@ -85,7 +46,7 @@ function showContextMenu(e, file) {
     var del = document.getElementById("cmDelete");
 
     var renameHandler = function() {
-        renameFile(file);
+        showPromptMenu("Enter a new file name:", file, "rename");
         cm.style.display = "none";
     }
 
@@ -107,6 +68,50 @@ function showContextMenu(e, file) {
         cm.style.display = "none";
         this.window.removeEventListener("click", cmHandler);
     });
+}
+
+function showPromptMenu(msg, file, func) {
+    var pm = document.getElementById("promptMenu");
+    var pmTitle = document.getElementById("pmTitle");
+    var pmInput = document.getElementById("pmInput");
+    var pmConfirm = document.getElementById("pmConfirm");
+    var pmCancel = document.getElementById("pmCancel");
+    var pmMessage = document.getElementById("pmMessage");
+
+    pmTitle.innerHTML = msg;
+    pm.style.display = "block";
+
+    var confirmHandler = function() {
+        if(pmInput.value === "" || pmInput.value === null) {
+            pmMessage.innerHTML = "Invalid file name.";
+        } else { 
+            pmConfirm.removeEventListener("click", confirmHandler);
+            pmCancel.removeEventListener("click", cancelHandler);
+            pm.style.display = "none";
+            let notification = "";
+            if(func === "rename") {
+                notification = fileSystem[file].name + " renamed to " + pmInput.value + ".";
+                fileSystem[file].name = pmInput.value;
+            } else if(func === "create") {
+                notification = pmInput.value + " created.";
+                fileSystem.push({name: pmInput.value, data: "none"});
+            }
+            showNotification(notification);
+            pmInput.value = "";
+            showFiles();
+        }
+    }   
+
+    var cancelHandler = function() {
+        pmConfirm.removeEventListener("click", confirmHandler);
+        pmCancel.removeEventListener("click", cancelHandler);
+        pm.style.display = "none";
+        showFiles();
+    }
+
+    pmConfirm.addEventListener("click", confirmHandler);
+    pmCancel.addEventListener("click", cancelHandler);
+
 }
 
 function showNotification(msg) {
@@ -192,7 +197,7 @@ let canvasHeight = 600;
 let color = ["#ff0000", "#ffffff", "#FFFF00", "#000000"];
 
 let pos = {x: 0, y: 0};
-var startLine = true;
+let startLine = true;
 let mode = 0;
 
 let drawCanvas = {
@@ -304,16 +309,16 @@ function setMode(num) {
 
 function keyControls(e) {
     switch(e.key) {
-        case 'p':
+        case '1':
             setMode(0);
             break;
-        case 'e':
+        case '2':
             setMode(1);
             break;
-        case 'h':
+        case '3':
             setMode(2);
             break;
-        case 'l':
+        case '4':
             setMode(3);
             break;
         case 's':
