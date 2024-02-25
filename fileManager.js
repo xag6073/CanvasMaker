@@ -8,11 +8,44 @@ let fileSystem = [
 ]
 
 function create() {
-    let fileName = prompt("Enter file name: ", "newCanvas");
+    var pm = document.getElementById("promptMenu");
+    var pmTitle = document.getElementById("pmTitle");
+    var pmInput = document.getElementById("pmInput");
+    var pmConfirm = document.getElementById("pmConfirm");
+    var pmCancel = document.getElementById("pmCancel");
+    var pmMessage = document.getElementById("pmMessage");
+
+    pmTitle.innerHTML = "Enter a file name:";
+    pm.style.display = "block";
+
+    var confirmHandler = function() {
+        if(pmInput.value === "" || pmInput.value === null) {
+            pmMessage.innerHTML = "Invalid file name.";
+        } else { 
+            pmConfirm.removeEventListener("click", confirmHandler);
+            pmCancel.removeEventListener("click", cancelHandler);
+            pm.style.display = "none";
+            fileSystem.push({name: pmInput.value, data: "none"});
+            pmInput.value = "";
+            showFiles();
+        }
+    }   
+
+    var cancelHandler = function() {
+        pmConfirm.removeEventListener("click", confirmHandler);
+        pmCancel.removeEventListener("click", cancelHandler);
+        pm.style.display = "none";
+        showFiles();
+    }
+
+    pmConfirm.addEventListener("click", confirmHandler);
+    pmCancel.addEventListener("click", cancelHandler);
+
+    /*let fileName = prompt("Enter file name: ", "newCanvas");
     if(fileName !== null || fileName === "") {
         fileSystem.push({name: fileName, data: "none"});
         showFiles();
-    }
+    }*/
 
 }
 
@@ -35,7 +68,7 @@ function createFileButton(file) {
     var button = document.createElement("button");
     button.value = file;
     button.className = "icon-button";
-    button.innerHTML = fileSystem[file].name; 
+    button.innerHTML += fileSystem[file].name; 
     button.addEventListener("click", function() {
         showCanvas(file);
     });
@@ -76,18 +109,44 @@ function showContextMenu(e, file) {
     });
 }
 
-function renameFile(input) {
-    let newName = prompt("Enter new file name: ");
-    if(newName !== null || newName === "") {
-        fileSystem[input].name = newName;
+function renameFile(file) {
+    var pm = document.getElementById("promptMenu");
+    var pmTitle = document.getElementById("pmTitle");
+    var pmInput = document.getElementById("pmInput");
+    var pmConfirm = document.getElementById("pmConfirm");
+    var pmCancel = document.getElementById("pmCancel");
+    var pmMessage = document.getElementById("pmMessage");
+
+    pmTitle.innerHTML = "Enter a new file name:";
+    pm.style.display = "block";
+
+    var confirmHandler = function() {
+        if(pmInput.value === "" || pmInput.value === null) {
+            pmMessage.innerHTML = "Invalid file name.";
+        } else { 
+            pmConfirm.removeEventListener("click", confirmHandler);
+            pmCancel.removeEventListener("click", cancelHandler);
+            pm.style.display = "none";
+            fileSystem[file].name = pmInput.value;
+            pmInput.value = "";
+            showFiles();
+        }
+    }   
+
+    var cancelHandler = function() {
+        pmConfirm.removeEventListener("click", confirmHandler);
+        pmCancel.removeEventListener("click", cancelHandler);
+        pm.style.display = "none";
         showFiles();
-        return;
     }
-    alert("Invalid new file name.");
+
+    pmConfirm.addEventListener("click", confirmHandler);
+    pmCancel.addEventListener("click", cancelHandler);
+
 }
 
-function deleteFile(input) {
-    fileSystem.splice(input, 1);
+function deleteFile(file) {
+    fileSystem.splice(file, 1);
     showFiles();
 }
 
@@ -123,12 +182,14 @@ let mode = 0;
 let drawCanvas = {
     canvas: document.createElement("canvas"),
     start: function(file) {
-        this.canvas.width = canvasWidth;
-        this.canvas.height = canvasHeight;
+        this.canvas.width = window.innerWidth - 25;
+        this.canvas.height = window.innerHeight - 25;
         this.ctx = this.canvas.getContext("2d");
 
+        //styling
         this.canvas.style.border = "5px solid black";
         this.canvas.style.cursor = "crosshair";
+        this.canvas.style.transform = "translateX(2px)";
 
         document.body.appendChild(this.canvas);
 
@@ -172,13 +233,13 @@ function draw(e) {
             pos.y = e.offsetY;
             break;
         case 1:
-            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, "white", 5);
+            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, "white", 30);
             pos.x = e.offsetX;
             pos.y = e.offsetY;
             break;
         case 2:
             drawCanvas.ctx.globalAlpha = 0.15;
-            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, color[2], 5);
+            drawLine(pos.x, pos.y, e.offsetX, e.offsetY, color[2], 30);
             drawCanvas.ctx.globalAlpha = 1;
             pos.x = e.offsetX;
             pos.y = e.offsetY;
@@ -302,7 +363,7 @@ function startControls() {
 }
 
 function save() {
-    let imageData = drawCanvas.ctx.getImageData(0, 0, canvasHeight, canvasWidth);
+    let imageData = drawCanvas.ctx.getImageData(0, 0, drawCanvas.canvas.height, drawCanvas.canvas.width);
     fileSystem[drawCanvas.file].data = imageData;
 }
 
