@@ -25,6 +25,7 @@ function create() {
             pmConfirm.removeEventListener("click", confirmHandler);
             pmCancel.removeEventListener("click", cancelHandler);
             pm.style.display = "none";
+            showNotification(pmInput.value + " created.");
             fileSystem.push({name: pmInput.value, data: "none"});
             pmInput.value = "";
             showFiles();
@@ -109,6 +110,20 @@ function showContextMenu(e, file) {
     });
 }
 
+function showNotification(msg) {
+    var notifications = document.getElementById('notifications');
+  
+    var notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = msg;
+  
+    notifications.appendChild(notification);
+  
+    setTimeout(function() {
+      notifications.removeChild(notification);
+    }, 5000);
+  }
+
 function renameFile(file) {
     var pm = document.getElementById("promptMenu");
     var pmTitle = document.getElementById("pmTitle");
@@ -127,6 +142,7 @@ function renameFile(file) {
             pmConfirm.removeEventListener("click", confirmHandler);
             pmCancel.removeEventListener("click", cancelHandler);
             pm.style.display = "none";
+            showNotification(fileSystem[file].name + " renamed to " + pmInput.value);
             fileSystem[file].name = pmInput.value;
             pmInput.value = "";
             showFiles();
@@ -146,6 +162,7 @@ function renameFile(file) {
 }
 
 function deleteFile(file) {
+    showNotification(fileSystem[file].name + " deleted.");
     fileSystem.splice(file, 1);
     showFiles();
 }
@@ -320,6 +337,7 @@ function startControls() {
     var highlighterBtn = document.createElement("button");
     var lineBtn = document.createElement("button");
     var colorInput = document.createElement("input");
+    var saveBtn = document.createElement("button");
     colorInput.type = "color";
     colorInput.value = color[mode];
 
@@ -332,10 +350,15 @@ function startControls() {
     lineBtn.innerHTML = "<img src='./assets/line.png' width=\"25\" height=\"25\">";
     lineBtn.className = "tool-button";
     colorInput.className = "tool-button";
+    saveBtn.innerHTML = "Save";
+    saveBtn.className = "tool-button";
 
     //make color input a bit more symetrical
     colorInput.style.padding = "3px 3px";
     colorInput.style.transform = "translateY(-4px)";
+    //same for save
+    saveBtn.style.padding = "5px 5px";
+    saveBtn.style.transform = "translateY(-5px)";
 
     penBtn.addEventListener("click", function() {
         setMode(0);
@@ -352,12 +375,16 @@ function startControls() {
     colorInput.addEventListener("change", function() {
         color[mode] = colorInput.value;
     });
+    saveBtn.addEventListener("click", function() {
+        save();
+    });
     
     drawCanvas.toolbar.appendChild(penBtn);
     drawCanvas.toolbar.appendChild(eraserBtn);
     drawCanvas.toolbar.appendChild(highlighterBtn);
     drawCanvas.toolbar.appendChild(lineBtn);
     drawCanvas.toolbar.appendChild(colorInput);
+    drawCanvas.toolbar.appendChild(saveBtn);
     document.body.insertBefore(drawCanvas.toolbar, drawCanvas.canvas);
 
 }
@@ -365,6 +392,7 @@ function startControls() {
 function save() {
     let imageData = drawCanvas.ctx.getImageData(0, 0, drawCanvas.canvas.height, drawCanvas.canvas.width);
     fileSystem[drawCanvas.file].data = imageData;
+    showNotification("File saved.");
 }
 
 

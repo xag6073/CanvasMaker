@@ -130,3 +130,19 @@ body {
 .prompt-button.cancel {
     background-color: #f44336;
 }
+
+#notifications {
+    position: fixed;
+    top: 0;
+    right: 0;
+    display: inline-block;
+}
+  
+.notification {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+}
